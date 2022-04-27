@@ -21,7 +21,7 @@ export class User {
             where: { email: this.email }
         })
 
-        if (userExists) return response.status(301);
+        if (userExists) return response.status(406);
 
         await prisma.user.create({
             data: {
