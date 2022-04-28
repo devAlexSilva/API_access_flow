@@ -1,5 +1,7 @@
 import pkg from '@prisma/client'
 import { response } from 'express'
+import bcrypt from 'bcrypt'
+
 
 const { PrismaClient } = pkg;
 const prisma = new PrismaClient()
@@ -23,15 +25,18 @@ export class User {
 
         if (userExists) return response.status(406);
 
+        const hashPassword = await bcrypt.hash(this.password, 8);
+
         await prisma.user.create({
             data: {
                 name: this.name,
                 email: this.email,
-                password: this.password
+                password: hashPassword
             }
         })
         return response.status(201);
-
     }
+
+
 
 }
