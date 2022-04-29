@@ -19,28 +19,30 @@ export class Login {
 
         if (this.password.length < 6) return 1;
 
-        const hashPassword = await bcrypt.compare(this.password, 8);
-
         const userMatch = await prisma.user.findFirst({
             where: {
-                email: this.email,
-                password: hashPassword
+                email: this.email
             },
             select: {
-                id: true,
-                name: true
+                password: true,
+                id: true
             }
 
         });
 
-        return userMatch;
+        const passwordIsCorrect = await bcrypt.compare(this.password, userMatch.password);
+        const id = userMatch.id;
+
+        return { passwordIsCorrect, id };
     }
 
     async tryLogin() {
         if (await this.#verify() === 1) return response.status(400);
 
-        const { id } = await this.#verify();
-        return console.log(id)
+        const handleUser = await this.#verify();
+        if(!handleUser.passwordIsCorrect) return response.status(401);
         
+        const token = jwt.sign({ accessToken: handleUser.id }, process.env.TOKEN, { expiresIn: '1h' })
+        return token;
     }
 }
