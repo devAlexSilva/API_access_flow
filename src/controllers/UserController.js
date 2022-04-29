@@ -8,7 +8,7 @@ export class User {
     email
     password
 
-    constructor({ name, email, password }) {
+    constructor(name, email, password) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -20,8 +20,8 @@ export class User {
             where: { email: this.email }
         })
 
-        if (userExists) return response.status(406);
-
+        if (userExists) return response.status(400);
+        
         const hashPassword = await bcrypt.hash(this.password, 8);
 
         await prisma.user.create({
@@ -31,9 +31,23 @@ export class User {
                 password: hashPassword
             }
         })
+
         return response.status(201);
     }
 
+    async read(userId) {
+        const user = await prisma.user.findUnique({
+            where: {id: Number(userId)},
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                createdAt: true,
+                updatedAt: true
+            }
+        })
 
+        return user;
+    }
 
 }
