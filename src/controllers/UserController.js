@@ -1,10 +1,7 @@
-import pkg from '@prisma/client'
 import { response } from 'express'
 import bcrypt from 'bcrypt'
+import { prisma } from '../prisma/client.js'
 
-
-const { PrismaClient } = pkg;
-const prisma = new PrismaClient()
 
 export class User {
     name
