@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(helmet());
 app.use(cors())
 
-app.get('/', (req, res) => res.send('documentação com swagger em breve'));
+app.get('/', (req, res) => res.status(200).send('documentação com swagger em breve'));
 app.use(routes);
 
 

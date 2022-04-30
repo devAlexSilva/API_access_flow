@@ -23,44 +23,59 @@ export class User {
 
         if (userExists) return response.status(400);
 
-        const hashPassword = await bcrypt.hash(this.password, 8);
+        try {
+            const hashPassword = await bcrypt.hash(this.password, 8);
 
-        await prisma.user.create({
-            data: {
-                name: this.name,
-                email: this.email,
-                password: hashPassword
-            }
-        })
+            await prisma.user.create({
+                data: {
+                    name: this.name,
+                    email: this.email,
+                    password: hashPassword
+                }
+            })
 
-        return response.status(201);
+            return response.status(201);
+
+        } catch {
+            return response.status(400);
+        }
     }
 
     async read(userId) {
-        const user = await prisma.user.findUnique({
-            where: { id: Number(userId) },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                createdAt: true,
-                updatedAt: true
-            }
-        })
+        try {
+            const user = await prisma.user.findUnique({
+                where: { id: Number(userId) },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    createdAt: true,
+                    updatedAt: true
+                }
+            })
 
-        return user;
+            return user;
+
+        }
+        catch {
+            return response.status(400);
+        }
     }
 
     async update(id, dataToUpdate) {
         const { name } = dataToUpdate;
-        
+
         try {
             await prisma.user.update({
-                where: { id: Number(id) },
-                data: { name: name }
+                where: {
+                    id: Number(id)
+                },
+                data: {
+                    name: name
+                }
             });
-            
-            return response.status(200);
+
+            return response.end();
         } catch {
 
             return response.status(400);

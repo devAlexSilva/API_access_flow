@@ -18,7 +18,6 @@ export class Login {
         if (this.email == null || this.password == null) return 1;
 
         if (this.password.length < 6) return 1;
-
         const userMatch = await prisma.user.findFirst({
             where: {
                 email: this.email
@@ -34,15 +33,23 @@ export class Login {
         const id = userMatch.id;
 
         return { passwordIsCorrect, id };
+
+
     }
 
     async tryLogin() {
-        if (await this.#verify() === 1) return response.status(400);
+        try {
+            if (await this.#verify() === 1) return response.status(400);
 
-        const handleUser = await this.#verify();
-        if(!handleUser.passwordIsCorrect) return response.status(401);
-        
-        const token = jwt.sign({ accessToken: handleUser.id }, process.env.TOKEN, { expiresIn: '1h' })
-        return token;
+            const handleUser = await this.#verify();
+            if (!handleUser.passwordIsCorrect) return response.status(401);
+
+            const token = jwt.sign({ accessToken: handleUser.id }, process.env.TOKEN, { expiresIn: '1h' })
+            return token;
+    
+        } catch {
+            return response.status(400);
+        }
     }
+
 }

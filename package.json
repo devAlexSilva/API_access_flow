@@ -9,7 +9,7 @@
     "dev": "nodemon src/app/server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "devAlexSilva",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^3.13.0",
