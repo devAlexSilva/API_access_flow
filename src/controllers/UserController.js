@@ -4,6 +4,7 @@ import { prisma } from '../prisma/client.js'
 
 
 export class User {
+    #id
     name
     email
     password
@@ -21,7 +22,7 @@ export class User {
         })
 
         if (userExists) return response.status(400);
-        
+
         const hashPassword = await bcrypt.hash(this.password, 8);
 
         await prisma.user.create({
@@ -37,7 +38,7 @@ export class User {
 
     async read(userId) {
         const user = await prisma.user.findUnique({
-            where: {id: Number(userId)},
+            where: { id: Number(userId) },
             select: {
                 id: true,
                 name: true,
@@ -48,6 +49,22 @@ export class User {
         })
 
         return user;
+    }
+
+    async update(id, dataToUpdate) {
+        const { name } = dataToUpdate;
+        
+        try {
+            await prisma.user.update({
+                where: { id: Number(id) },
+                data: { name: name }
+            });
+            
+            return response.status(200);
+        } catch {
+
+            return response.status(400);
+        }
     }
 
 }

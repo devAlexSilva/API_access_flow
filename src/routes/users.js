@@ -7,10 +7,18 @@ const user = express.Router();
 user.use(middleware);
 
 user.get('/', async (req, res) => {
-    const userLogged = await new User().read(req.baseUrl);
+    const id = req.baseUrl;
+    const userLogged = await new User().read(id);
     //essa baseUrl tá sendo setada pelo middleware e recebe o id do user no token
-    return res.send(userLogged);
+    res.send(userLogged);
 })
 
+user.put('/update', async(req, res) => {
+    const dataToUpdate = req.body;
+    const id = req.baseUrl;
+
+    const handleReturn = await new User().update(id, dataToUpdate);
+    res.send(handleReturn);
+})
 
 export { user }
