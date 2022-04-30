@@ -14,10 +14,11 @@ export class Login {
     }
 
 
-    async #verify() {
-        if (this.email == null || this.password == null) return 1;
+    async #verifyDataUser() {
+        if (this.email == null || this.password == null) return 'invalid';
 
-        if (this.password.length < 6) return 1;
+        if (this.password.length < 6) return 'invalid';
+
         const userMatch = await prisma.user.findFirst({
             where: {
                 email: this.email
@@ -33,15 +34,13 @@ export class Login {
         const id = userMatch.id;
 
         return { passwordIsCorrect, id };
-
-
     }
 
     async tryLogin() {
         try {
-            if (await this.#verify() === 1) return response.status(400);
+            if (await this.#verifyDataUser() === 'invalid') return response.status(400);
 
-            const handleUser = await this.#verify();
+            const handleUser = await this.#verifyDataUser();
             if (!handleUser.passwordIsCorrect) return response.status(401);
 
             const token = jwt.sign({ accessToken: handleUser.id }, process.env.TOKEN, { expiresIn: '1h' })
@@ -51,5 +50,4 @@ export class Login {
             return response.status(400);
         }
     }
-
 }

@@ -13,5 +13,4 @@ app.use(cors())
 app.get('/', (req, res) => res.status(200).send('documentação com swagger em breve'));
 app.use(routes);
 
-
 app.listen(port, () => console.log(`running in http://localhost:${port}`));

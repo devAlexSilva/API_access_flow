@@ -11,7 +11,6 @@ export const middleware = (req, res, next) => {
         if(err) return res.status(401);
         return req.baseUrl = decoded.accessToken; //pra ter acesso apenas com token do próprio user
     });
-    
-    
+        
     next()
 }

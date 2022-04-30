@@ -23,6 +23,7 @@ user.put('/update', async(req, res) => {
 
 user.delete('/delete', async(req, res) => {
     const id = req.baseUrl;
+
     const handleReturn = await new User().delete(id);
     res.send(handleReturn);
 })

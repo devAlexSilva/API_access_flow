@@ -4,7 +4,6 @@ import { prisma } from '../prisma/client.js'
 
 
 export class User {
-    #id
     name
     email
     password
@@ -15,10 +14,11 @@ export class User {
         this.password = password;
     }
 
-
     async create() {
         const userExists = await prisma.user.findFirst({
-            where: { email: this.email }
+            where: {
+                email: this.email
+            }
         })
 
         if (userExists) return response.status(400);
@@ -76,8 +76,8 @@ export class User {
             });
 
             return response.status(200);
+        
         } catch {
-
             return response.status(400);
         }
     }
@@ -89,11 +89,11 @@ export class User {
                     id: id
                 }
             })
+            
             return response.status(200);
 
         } catch {
             return response.status(400);
         }
     }
-
 }
