@@ -21,5 +21,11 @@ user.put('/update', async(req, res) => {
     res.send(handleReturn);
 })
 
+user.delete('/delete', async(req, res) => {
+    const id = req.baseUrl;
+    const handleReturn = await new User().delete(id);
+    res.send(handleReturn);
+})
+
 
 export { user }

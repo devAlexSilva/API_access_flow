@@ -75,9 +75,23 @@ export class User {
                 }
             });
 
-            return response.end();
+            return response.status(200);
         } catch {
 
+            return response.status(400);
+        }
+    }
+
+    async delete(id) {
+        try {
+            await prisma.user.delete({
+                where: {
+                    id: id
+                }
+            })
+            return response.status(200);
+
+        } catch {
             return response.status(400);
         }
     }
