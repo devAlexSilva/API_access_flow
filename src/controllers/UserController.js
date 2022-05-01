@@ -21,9 +21,10 @@ export class User {
             }
         })
 
-        if (userExists) return response.status(400);
+        if (userExists) throw new Error('user already existis');
+        if (this.password.length < 6) throw new Error('password too short');
 
-        try {
+        
             const hashPassword = await bcrypt.hash(this.password, 8);
 
             await prisma.user.create({
@@ -34,11 +35,7 @@ export class User {
                 }
             })
 
-            return response.status(201);
-
-        } catch {
-            return response.status(400);
-        }
+            return response.status(201); 
     }
 
     async read(userId) {
@@ -55,7 +52,6 @@ export class User {
             })
 
             return user;
-
         }
         catch {
             return response.status(400);
